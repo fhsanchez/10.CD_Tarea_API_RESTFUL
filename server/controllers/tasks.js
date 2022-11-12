@@ -7,9 +7,7 @@ module.exports = {
       .catch(err => res.json(err));    
   },
 
-  getId: function (req, res) {
-    console.log("Entro a getId");
-    console.log(req.params.id);
+  getId: function (req, res) {   
     Task.findOne({ _id: req.params.id })
       .then(task => res.json(task))
       .catch(err => res.json(err));    
@@ -29,31 +27,43 @@ module.exports = {
 
   },
 
-  edit: function (req, res) {
-    console.log("Entro a editar");
+  edit: async function (req, res) { 
     const task = new Task();
-  
-    Task.findOne({ _id: req.params.id })
-      .then((task) => {
-        console.log("encontrado : " + task);
-        res.render("form_nutria", { task: task });
-        //res.redirect("/form_nutria");
-      })
-      .catch((err) => res.json(err));
+    let id = req.params.id;
+    console.log("editandoooo");
+    console.log(req.body)
+    // Task.findOne({title: req.body.name})
+    //     .then(task => {
+    //     task.title = req.body.name;
+    //     task.pets.push({title: req.body.title, description: req.body.description});
+    //     return task.save();
+    //     })
+    //   .then(saveResult => res.json(saveResult))
+    //   .catch(err => res.json(err));
+
+      const filter = {title : req.body.title};
+      const update = {title : req.params.title, description : req.params.description, completed : req.params.completed };
+      const option = {new : true};
+      const doc =  await Task.findOneAndUpdate(filter, update, option);
+      console.log(doc.body);
+      res.json(doc.body);
+        
+
+    // Task.updateOne({ _id: id },{
+    //   _id : id, 
+    //   $push : { pets : {title : req.params.title, 
+    //                     description : req.params.description, 
+    //                     completed : req.params.completed }}
+    // })
+    //   .then(updateTask => console.log("Tarea editadas " + updateTask))
+    //   .catch((err) => res.json(err));
   },
 
   delete: function (req, res) {
-  
-    console.log("Entro a delete");
-    let id = req.params.id;
-    
+    let id = req.params.id;    
     Task.deleteOne({ _id: id })
-      .then((deletedTask) => {       
-        console.log("eliminado: " + deleteTask);
-        res.redirect("/nutria");
-      })
+      .then(deletedTask => res.json(deletedTask))
       .catch((err) => res.json(err));
-
   }
 
 };
