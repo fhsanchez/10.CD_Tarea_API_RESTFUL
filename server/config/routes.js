@@ -21,6 +21,7 @@ app.get("/tasks", (req, res) => {
   
   // 4. Edita los datos de una Task
   app.put("/tasks/:id", (req, res) => {   
+    console.log("Route editar");
     tasks.edit(req, res);
 
   });
